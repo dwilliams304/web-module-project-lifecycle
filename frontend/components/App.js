@@ -10,6 +10,7 @@ export default class App extends React.Component {
     todos: [],
     error: '',
     todoInput: '',
+    completedOnly: true,
   }
 
   fetchTodos = () => {
@@ -58,18 +59,29 @@ export default class App extends React.Component {
       .catch(this.setErrors)
   }
 
+  toggleCompletedDisplay = () => {
+    this.setState({...this.state, completedOnly: !this.state.completedOnly})
+  }
+
   render() {
     return(
       <>
-      {
-        this.state.error && <h2>Error: {this.state.error}</h2>
-      }
-        <TodoList todos={this.state.todos} toggle={this.toggle}/>
+        {
+          this.state.error && <h2>Error: {this.state.error}</h2>
+        }
+        <TodoList 
+          todos={this.state.todos} 
+          toggle={this.toggle}
+          completedOnly={this.state.completedOnly}  
+        />
         <Form 
           handleChange={this.handleChange} 
           inputValue={this.state.todoInput} 
           submit={this.addTodo}
         />
+        <button onClick={this.toggleCompletedDisplay}>
+          {this.state.completedOnly ? 'Hide': 'Show'} Completed Tasks
+        </button>
       </>
     )
   }
