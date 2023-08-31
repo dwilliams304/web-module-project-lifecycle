@@ -4,12 +4,12 @@ export default class Todo extends React.Component {
   
 
   render() {
-    const {name, complete} = this.props;
+    const {id, name, completed, toggle} = this.props;
 
     return (
-      <>
-        <h2>{name}</h2>
-      </>
+      <div onClick={toggle(id)}>
+        <h3>{name} {completed ? '✔️' : ''}</h3>
+      </div>
     )
   }
 }

@@ -21,9 +21,9 @@ export default class App extends React.Component {
   }
 
   postTodo = () => {
-    axios.post(URL, {name: this.state.todoInput})
+    axios.post(URL, {name: this.state.todoInput, complete: false})
       .then(res => {
-        this.fetchTodos();
+        this.setState({...this.state, todos: this.state.todos.concat(res.data.data)})
         this.resetForm();
       })
       .catch(this.setErrors)
@@ -47,13 +47,24 @@ export default class App extends React.Component {
     this.setState({...this.state, todoInput: value})
   }
 
+  toggle = id => e => {
+    axios.patch(`${URL}/${id}`)
+      .then(res => {
+        this.setState({...this.state, todos: this.state.todos.map(td => {
+          if(td.id !== id) return td;
+          return res.data.data
+        })})
+      })
+      .catch(this.setErrors)
+  }
+
   render() {
     return(
       <>
       {
         this.state.error && <h2>Error: {this.state.error}</h2>
       }
-        <TodoList todos={this.state.todos}/>
+        <TodoList todos={this.state.todos} toggle={this.toggle}/>
         <Form 
           handleChange={this.handleChange} 
           inputValue={this.state.todoInput} 
